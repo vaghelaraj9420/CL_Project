@@ -23,7 +23,7 @@ class PythonHTTP(BaseHTTPRequestHandler):
                 # end of file is reached
                 if not line:
                     break
-                print(line)
+                # print(line)
                 self.wfile.write(bytes(line,"utf-8"))
 
 
@@ -44,9 +44,19 @@ class PythonHTTP(BaseHTTPRequestHandler):
         self.send_header("Content-type", "application/json")
         self.end_headers()
 
-        date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
+        # date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
 
-        self.wfile.write(bytes('{"time": "' + date + '"}', "utf-8"))
+        # self.wfile.write(bytes('{"time": "' + date + '"}', "utf-8"))
+
+        data = self.rfile.read(int(self.headers.getheader('Content-Length')))
+        empty = [data]
+        with open('processing.txt', 'wb') as file:
+            for item in empty:
+                file.write("%s\n" % item)
+
+        file.close()
+        self._set_headers()
+        self.wfile.write("<html><body><h1>POST!</h1></body></html>")
 
 
 server = HTTPServer((HOST, PORT), PythonHTTP)
